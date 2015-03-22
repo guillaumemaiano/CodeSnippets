@@ -11,8 +11,8 @@ alias dfh="df -h"
 let PORT=21
 let URL_PI="undefined"
 # must be edited when pulled on a new platform
-if [ $PORT -eq 21 ]; then echo -e "\e[1;35mSSH runs on default port\e[0m"; fi
-if [ $URL_PI == "undefined" ]; then echo -e " \e[31PI_URL undefined, config not set\e[0m"; fi
+if [ $PORT -eq 21 ]; then echo -e "\x1B[1;35mSSH runs on default port\x1B[0m"; fi
+if [ $URL_PI == "undefined" ]; then echo -e " \x1B[31PI_URL undefined, config not set\x1B[0m"; fi
 if [ `uname -s` == "Darwin" ]; then
   alias sshpi="if [ `/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -I | awk '/ SSID/ {print substr($0, index($0, $2))}'` == 'GeM' ]; then ssh pi@192.168.0.23;  else  ssh -p $PORT $URL_PI; fi" # set depending on current config
 elif [ `uname -s` == "Linux" ]; then
