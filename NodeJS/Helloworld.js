@@ -3,6 +3,7 @@ var fs = require('fs');
 
 
 var port = 9988;
+var duration = 3000;
 var application = function(){
   var server = http.createServer(
       function(request, response){
@@ -12,7 +13,17 @@ var application = function(){
       }
   );
   server.listen(port); // listen for connections on a port I'm not using otherwise
-  console.log("Listening on port "+port);
+  console.log("Listening on port "+port+" for the next "+duration/1000+" seconds.");
+  setTimeout(function(){
+    server.close();
+  },duration);
+
+  process.on('SIGTERM', function () { // gracefully deals with server being killed (SIGKILL cannot be handled)
+    console.log("Shutting down");
+    server.close(function () {
+      process.exit(0);
+    });
+  });
 }
 
 try {
@@ -21,6 +32,7 @@ try {
     var settings = JSON.parse(contentsOfSettings);
     if (settings.port){ //TODO test for existence properly
       port = settings.port;
+      duration = settings.duration;
     }
     try {
       application();
