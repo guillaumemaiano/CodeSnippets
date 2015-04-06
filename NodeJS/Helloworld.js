@@ -2,7 +2,7 @@ var http = require("http");
 var fs = require('fs');
 
 
-var port = 9977;
+var port = 9988;
 var application = function(){
   var server = http.createServer(
       function(request, response){
@@ -19,6 +19,9 @@ try {
   var contentsOfSettings = fs.readFileSync('settings.json'); // Synchronous because you need the settings to execute properly
   try {
     var settings = JSON.parse(contentsOfSettings);
+    if (settings.port){ //TODO test for existence properly
+      port = settings.port;
+    }
     try {
       application();
     }
@@ -27,6 +30,8 @@ try {
     }
   }
   catch(e_parse) {
+    console.log(e_parse);
+
     console.log("Settings file couldn't be parsed correctly");
   }
 }
