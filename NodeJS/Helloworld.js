@@ -4,7 +4,6 @@ var fs = require('fs');
 
 var port = 9977;
 var application = function(){
-  var settings = JSON.parse(contentsOfSettings);
   var server = http.createServer(
       function(request, response){
           response.writeHead(200); // HTTP status code in header (200 for OK)
@@ -19,6 +18,7 @@ var application = function(){
 try {
   var contentsOfSettings = fs.readFileSync('settings.json'); // Synchronous because you need the settings to execute properly
   try {
+    var settings = JSON.parse(contentsOfSettings);
     try {
       application();
     }
