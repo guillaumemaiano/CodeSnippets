@@ -19,6 +19,8 @@ var setupImprovedServer = function(server) {
 };
 
 var demonstrateAnotherSyntaxForServerDeclaration = function(){
+  // demonstrates events
+  events.on("close",function(){console.log("Bye!");});
   // the next exemple improves the server declaration to be more readable
   var server2 = http.createServer();
   setupImprovedServer(server2);
@@ -26,6 +28,8 @@ var demonstrateAnotherSyntaxForServerDeclaration = function(){
   console.log("Listening on port "+port+" for the next "+duration/1000+" seconds.");
   setTimeout(function() {
     server2.close();
+  // demonstrates events
+  events.emit('close');
   }, duration);
 }
 
