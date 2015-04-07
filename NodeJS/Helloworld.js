@@ -1,10 +1,15 @@
+// requires
 var http = require("http");
 var fs = require('fs');
-
-
+var EventEmitter =require('events').EventEmitter;
+// settings
 var port = 9988;
 var duration = 3000;
 
+// emitters
+var events = new EventEmitter();
+
+// methods
 var setupImprovedServer = function(server) {
   server.on('request', function(request, response) {
     response.writeHead(200);
