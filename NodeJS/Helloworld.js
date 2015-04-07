@@ -13,7 +13,7 @@ var events = new EventEmitter();
 var setupImprovedServer = function(server) {
   server.on('request', function(request, response) {
     response.writeHead(200);
-    response.write("<!DOCTYPE html><html><body>nothing</body></html>");
+    response.write("<!DOCTYPE html><html><body><h1>Improved!</h1></body></html>");
     response.end();
   });
 };
