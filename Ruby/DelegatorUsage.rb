@@ -41,3 +41,23 @@ class MyDelegateClass
   end
 
 end
+
+# this class is even more cool, it only delegates methods which start with "example"
+
+class MyIntelligentDelegator
+
+  def initialize(delegate)
+    @delegate = delegate
+  end
+
+  def method_missing(method_name, *args)
+    match = method_name.to_s.match(/^example_(\w+)/)
+    if match
+      puts "Matched" + match[1] 
+      @delegate.send(method_name, *args)
+    else
+      super
+    end
+  end
+
+end
