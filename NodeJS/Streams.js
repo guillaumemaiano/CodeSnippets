@@ -46,3 +46,12 @@ http.createServer( function( request, response) {
     response.writeHead(200);
     request.pipe(response);
 }).listen(9999);
+
+
+
+
+// demonstrates piping from file to file, as well as read/write streams
+// pipe is easier to use than chunk-based processes and ideal for this type of task
+var file = fs.creadReadStream("readme.md");
+var newFile = fs.createWriteStream("readme_copy.md");
+file.pipe(newFile);
