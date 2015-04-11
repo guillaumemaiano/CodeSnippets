@@ -4,6 +4,7 @@
 
 // requires
 var http = require('http');
+var fs = require('fs');
 
 var server = http.createServer( function( request, response) {
     response.writeHead(200);
@@ -55,3 +56,35 @@ http.createServer( function( request, response) {
 var file = fs.creadReadStream("readme.md");
 var newFile = fs.createWriteStream("readme_copy.md");
 file.pipe(newFile);
+
+
+// merges the ideas of the server and the file write to create an *upload server*
+
+http.createServer(
+        function( request, response ){
+            request.on("request", function() { 
+                  // **  We need to read the filename from the JSON
+                  var theUrl = url.parse( request.url );
+                  // gets the query part of the URL and parses it creating an object
+                  var queryObj = queryString.parse( theUrl.query );
+                  // queryObj will contain the data of the query as an object
+                  // and jsonData will be a property of it
+                  // so, using JSON.parse will parse the jsonData to create an object
+                  var requestSettings = JSON.parse( queryObj.jsonData );
+                 
+                  // ** upload the file
+                  var fileName = requestSettings.filename;
+                  if ( !fileName ) {
+                      console.log("Request failed to set filename");
+                      return;
+                  }
+                  var fileUploaded = fs.createWriteStream(requestSettings);
+                  request.pipe(fileUploaded);
+
+                  // ** respond to the end of the upload
+                  request.on('end', function(){
+                    response.end("Uploaded "+fileName);
+                  });
+            });            
+        }
+        );
