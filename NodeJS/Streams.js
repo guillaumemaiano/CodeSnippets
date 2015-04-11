@@ -53,14 +53,14 @@ http.createServer( function( request, response) {
 
 // demonstrates piping from file to file, as well as read/write streams
 // pipe is easier to use than chunk-based processes and ideal for this type of task
-var file = fs.creadReadStream("readme.md");
+var file = fs.createReadStream("readme.md");
 var newFile = fs.createWriteStream("readme_copy.md");
 file.pipe(newFile);
 
 
 // merges the ideas of the server and the file write to create an *upload server*
 
-http.createServer(
+var uploadServer = http.createServer(
         function( request, response ){
             request.on("request", function() { 
                   // **  We need to read the filename from the JSON
@@ -88,3 +88,5 @@ http.createServer(
             });            
         }
         );
+
+uploadServer.listen(11983);
