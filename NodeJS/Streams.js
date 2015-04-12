@@ -10,7 +10,7 @@ var fs = require('fs');
 // ** utility methods
 
 // this method returns the date as a UNO formatted string, accurate to the second
-var stringifyDateInUNOFormat() {
+var stringifyDateInUNOFormat = function() {
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth()+1; //January is 0!
@@ -144,7 +144,17 @@ var uploadServerWithFeedback = http.createServer(
                 fileUploaded = fs.createWriteStream(fileNameTmp);
             });
             // anytime a chunk is ready, consume it and updates the already uploaded size
-            request.on('readable', function() {});
+            request.on('readable', function() {
+                var chunk = null;
+                while ( null !== ( chunk = request.read() ) ) {
+                    uploadedSize += chunk.length;
+                    var progressPercent = parseInt(100*uploadedSize/requestSize,10);
+                    console.log("Progress: "+progressPercent+" %");
+                    response.write("Progress: "+progressPercent+" %\n");
+                }
+                response.write("Uploaded!\n");
+                response.end();
+            });
             // TODO: not sure if this will be called, needs testing
             // when the file is uploaded, logs to the console and changes the name
             request.on('end', function() {
@@ -153,6 +163,7 @@ var uploadServerWithFeedback = http.createServer(
                         if ( err ) console.log('ERROR: ' + err);
                 });
             });
+            // actually copies the file over
             request.pipe(fileUploaded);
         });
 
