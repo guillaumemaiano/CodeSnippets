@@ -6,6 +6,32 @@
 var http = require('http');
 var fs = require('fs');
 
+
+// ** utility methods
+
+// this method returns the date as a UNO formatted string, accurate to the second
+var stringifyDateInUNOFormat() {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+    var mn = today.getMinutes();
+    var ss = today.getSeconds();
+
+    if(dd<10) {
+        dd='0'+dd
+    } 
+
+    if(mm<10) {
+        mm='0'+mm
+    } 
+
+    today = "_"+yyyy+mm+dd+"_"+mn+":"+ss;
+    return today;
+}
+
+// ** code examples
+
 var server = http.createServer( function( request, response) {
     response.writeHead(200);
     request.on('readable', function() {
@@ -63,7 +89,8 @@ var duplicatesReadme = function() {
 // merges the ideas of the server and the file write to create an *upload server*
 
 var uploadServer = http.createServer(
-        function( request, response ){
+        function( request, response ) {
+            console.log("hi");
             request.on("request", function() {
                   console.log("Received a request");
 
@@ -88,12 +115,24 @@ var uploadServer = http.createServer(
                   var fileUploaded = fs.createWriteStream(requestSettings);
                   request.pipe(fileUploaded);
 
-                  // ** respond to the end of the upload
-                  request.on('end', function(){
-                    response.end("Uploaded "+fileName);
-                  });
             });            
+            // ** respond to the end of the upload
+            request.on('end', function(){
+                response.end("Uploaded "+fileName);
+            });
         }
         );
 
 uploadServer.listen(11983);
+
+
+// While using pipe is practical, it does take away some power
+// this technique allows us to give feedback
+
+var uploadServerWithFeedback = http.createServer(
+        function( request, response ) {
+        // 
+        
+        });
+
+uploadServerWithFeedback.listen(11984);
