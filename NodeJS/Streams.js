@@ -126,13 +126,34 @@ var uploadServer = http.createServer(
 uploadServer.listen(11983);
 
 
-// While using pipe is practical, it does take away some power
 // this technique allows us to give feedback
+// while we coul write to the file using the 'readable' chunks, notice how pipe is still handling this part!
 
 var uploadServerWithFeedback = http.createServer(
         function( request, response ) {
-        // 
-        
+            var requestSize;
+            var uploadedSize;
+            var fileUploaded;
+            request.on('request', function() {
+                // we need to know the size of the file uploaded to respond in percentage
+                requestSize = request.headers['content-length'];
+                uploadedSize = 0;
+                // we create a new file now 
+                var fileName = "test_file"+ stringifyDateInUNOFormat();
+                var fileNameTmp = fileName+".chunks";
+                fileUploaded = fs.createWriteStream(fileNameTmp);
+            });
+            // anytime a chunk is ready, consume it and updates the already uploaded size
+            request.on('readable', function() {});
+            // TODO: not sure if this will be called, needs testing
+            // when the file is uploaded, logs to the console and changes the name
+            request.on('end', function() {
+                console.log("Upload finished");
+                fs.rename(fileNameTmp, fileName, function(err) {
+                        if ( err ) console.log('ERROR: ' + err);
+                });
+            });
+            request.pipe(fileUploaded);
         });
 
 uploadServerWithFeedback.listen(11984);
