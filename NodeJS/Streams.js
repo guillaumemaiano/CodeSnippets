@@ -112,7 +112,7 @@ var uploadServer = http.createServer(
                   }
                   response.writeHead(200);
                   var fileUploaded = fs.createWriteStream(requestSettings);
-                  request.pipe(fileUploaded);
+                  request.pipe(fileUploaded, {end:false}); // because I want to show a message on the end event, I cannot let pipe deal with the end
 
             });            
             // ** respond to the end of the upload
@@ -163,7 +163,7 @@ var uploadServerWithFeedback = http.createServer(
                 });
             });
             // actually copies the file over
-            request.pipe(fileUploaded);
+            request.pipe(fileUploaded, {end:false});
         });
 
 uploadServerWithFeedback.listen(11984);
