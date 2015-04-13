@@ -63,7 +63,7 @@ try {
   var contentsOfSettings = fs.readFileSync('settings.json'); // Synchronous because you need the settings to execute properly
   try {
     var settings = JSON.parse(contentsOfSettings);
-    if (settings.port){ //TODO test for existence properly
+    if (settings.port) { //TODO test for existence properly
       port = settings.port;
       duration = settings.duration;
     }

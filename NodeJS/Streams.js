@@ -4,6 +4,7 @@
 
 // requires
 var http = require('http');
+var fs = require('fs'); // require filesystem module
 
 var server = http.createServer( function( request, response) {
     response.writeHead(200);
@@ -46,3 +47,8 @@ http.createServer( function( request, response) {
     response.writeHead(200);
     request.pipe(response);
 }).listen(9999);
+
+
+var file = fs.createReadStream("readme.md");
+
+
