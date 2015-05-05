@@ -30,9 +30,9 @@ var directory_in = ".";
 var prefix = makeDateString();
 
 // argument processing
+var action = "";
+var actions = ["dout", "din", "prefix"];
 process.argv.every( function(val, index, array) {
-    var action = "";
-    var actions = ["dout", "din", "prefix"];
     // Index 0 is "node"
     // Index 1 is the program's filename
     // even indexed values are arguments values
@@ -48,9 +48,9 @@ process.argv.every( function(val, index, array) {
             console.log("Arguments: -din -dout -prefix");
             return false;
         }
-       console.log(action); 
      } 
     else {
+        if ( index > 1) {
         switch (action) {
             case "dout":
                directory_out = val;
@@ -61,7 +61,9 @@ process.argv.every( function(val, index, array) {
             case "prefix": 
                prefix = val;
                break;
-            default:;
+            default:
+            console.log("Argument unknown");
+        }
         }
     }
     return true;
@@ -71,3 +73,13 @@ process.argv.every( function(val, index, array) {
     console.log("Output directory: "+directory_out);
     console.log("Prefix: "+prefix);
 
+var checkArgumentValidity = function() {
+    // Checking if the output directory exists
+    if (!fs.existsSync(directory_in)){
+        fs.mkdirSync(dir);
+    }
+    // Checking if the input directory exists
+    if (!fs.existsSync(directory_out)){
+        fs.mkdirSync(dir);
+    }
+}
