@@ -75,11 +75,22 @@ process.argv.every( function(val, index, array) {
 
 var checkArgumentValidity = function() {
     // Checking if the output directory exists
-    if (!fs.existsSync(directory_in)){
-        fs.mkdirSync(dir);
+    if (!fs.existsSync(directory_out)){
+        //TODO Add confirmation check
+        console.log("Output directory doesn't exist\nAttempting creation of "+directory_out);
+        fs.mkdirSync(directory_out); // Some people go "antipattern" on this. Their arguments are good, but it mainly applies to other situations. Here, I want this.
     }
     // Checking if the input directory exists
-    if (!fs.existsSync(directory_out)){
-        fs.mkdirSync(dir);
+    if (!fs.existsSync(directory_in)){
+        console.log("Input directory not found, aborting process.\n");
+        throw new Exception("Wrong input directory");
     }
-}
+};
+
+var renameFiles = function() {
+
+};
+
+var processFilesInDirectory() {
+    fs.readDir(directory_input, renameFiles);
+};
