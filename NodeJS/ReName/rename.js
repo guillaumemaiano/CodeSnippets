@@ -29,49 +29,52 @@ var directory_out = ".";
 var directory_in = ".";
 var prefix = makeDateString();
 
-// argument processing
-var action = "";
-var actions = ["dout", "din", "prefix"];
-process.argv.every( function(val, index, array) {
+
+var processArguments = function() {
+    // argument processing
+    var action = "";
+    var actions = ["dout", "din", "prefix"];
+    process.argv.every( function(val, index, array) {
     // Index 0 is "node"
     // Index 1 is the program's filename
     // even indexed values are arguments values
     // odd indexed values are argument parameters 
-    if ( 0 != index && isEven(index) ) {
-        if ( val.lastIndexOf("-", 0) === 0 ) {
-            actions.forEach(function(action_cursor, index, array){
-                if (val==="-"+action_cursor) {
-                    action = action_cursor;
-                }
-            });
-        } else {
-            console.log("Arguments: -din -dout -prefix");
-            return false;
+      if ( 0 != index && isEven(index) ) {
+         if ( val.lastIndexOf("-", 0) === 0 ) {
+              actions.forEach(function(action_cursor, index, array){
+                    if (val==="-"+action_cursor) {
+                        action = action_cursor;
+                    }
+                });
+            } else {
+                console.log("Arguments: -din -dout -prefix");
+                throw "Call incorrect";
+         }
+      } 
+     else {
+         if ( index > 1) {
+         switch (action) {
+             case "dout":
+                directory_out = val;
+                break;
+             case "din": 
+                directory_in = val;
+                break;
+             case "prefix": 
+                prefix = val;
+                break;
+             default:
+             console.log("Argument unknown\nArguments: -din -dout -prefix");
+             throw "Argument unknown";
+          }
+            }
         }
-     } 
-    else {
-        if ( index > 1) {
-        switch (action) {
-            case "dout":
-               directory_out = val;
-               break;
-            case "din": 
-               directory_in = val;
-               break;
-            case "prefix": 
-               prefix = val;
-               break;
-            default:
-            console.log("Argument unknown");
-        }
-        }
-    }
-    return true;
-});
+    });
 
     console.log("Settings:\nInput directory: "+directory_in);
     console.log("Output directory: "+directory_out);
     console.log("Prefix: "+prefix);
+}
 
 var checkArgumentValidity = function() {
     // Checking if the output directory exists
@@ -87,10 +90,14 @@ var checkArgumentValidity = function() {
     }
 };
 
-var renameFiles = function() {
-
+var renameFiles = function(err, files) {
+    if (err) throw err;
+    files.forEach(function(){console.log("\rhey")});
 };
 
-var processFilesInDirectory() {
-    fs.readDir(directory_input, renameFiles);
+var processFilesInDirectory = function() {
+    processArguments();
+    fs.readdir(directory_in, renameFiles);
 };
+
+processFilesInDirectory();
